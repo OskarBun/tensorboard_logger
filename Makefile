@@ -24,7 +24,7 @@ test: tests/test_tensorboard_logger.cc
 	g++ -std=c++11 $(INCLUDES) $(OBJS) $< -o $@ $(LDFLAGS)
 
 lib:
-	g++ $(OBJS) -shared -o lib/libtensorboard.so
+	g++ $(OBJS) -shared -o libtensorboard.so
 
 clean:
 	rm -f src/*.o test

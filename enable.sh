@@ -1,5 +1,5 @@
 ROOT=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
-LIB_PATH=$ROOT/lib
+LIB_PATH=$ROOT
 INCLUDE_PATH=$ROOT/include
 
 export LD_LIBRARY_PATH=$LIB_PATH:$LD_LIBRARY_PATH
