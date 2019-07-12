@@ -1,20 +1,26 @@
 project(tensorboard_logger)
 
-file(GLOB PROTOBUF_DEFINITION_FILES "*.proto")
+find_package(Protobuf REQUIRED)
 
-execute_process(
-  COMMAND "protoc -Iproto ${PROTOBUF_DEFINITION_FILES} --cpp_out=proto"
-)
+file(GLOB protos "proto/*.proto")
 
-file(GLOB sources "proto/*.proto" "src/*.pb.cc")
+# check if protobuf was found
+if(NOT PROTOBUF_FOUND)
+    message (FATAL_ERROR "Cannot find Protobuf")
+endif()
 
-set(TENSORBOARD_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/include)
+file(GLOB sources "src/*.cc")
+
+# Generate the .h and .cxx files
+PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${protos})
+
+set(TENSORBOARD_INCLUDE_PATH 
+  ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_BINARY_DIR})
 
 include_directories(${TENSORBOARD_INCLUDE_PATH})
 
 add_library(tensorboard SHARED 
-  ${PROTOBUF_DEFINITION_FILES}
   ${sources}
-  src/tensorboard_logger.cc 
-  src/crc.cc)
+  ${PROTO_SRCS})
 target_link_libraries(tensorboard -lprotobuf)
